@@ -6,13 +6,13 @@ import { create, all } from 'mathjs';
 const config = { };
 const math = create(all, config);
 
-const gridSize = 15;
+const gridSize = 10;
 
 const convergeRate = 0.5;
 
 const Container = styled.div`
   display: grid;
-  gap: 1px 1px;
+  gap: 2px;
   justify-content: center;
 
   grid-template-columns: repeat(${gridSize}, ${500/gridSize}px);

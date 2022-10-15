@@ -3,4 +3,11 @@
   padding: none;
 
   background-color: black;
+
+  transition-duration: .5s;
+}
+
+.pixel:hover {
+  cursor: pointer;
+  transform: scale(.85);
 }
