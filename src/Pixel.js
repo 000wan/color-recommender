@@ -60,7 +60,7 @@ const Pixel = ({ index, vector, clicked, setClicked }) => {
 
   return (
     <button key={index} onClick={handleClick} style={{ backgroundColor: vec_to_rgb(vector) }} className='pixel' >
-      {index}
+    
     </button>
   )
 }

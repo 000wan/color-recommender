@@ -52,6 +52,12 @@ const index_to_xy = (index) => {  // index = x*gridSize + y
   }};
 const xy_to_index = (x,y) => x*gridSize + y;
 
+const hexToRgb = (hex) => {
+  return hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
+    .substring(1).match(/.{2}/g)
+    .map(x => parseInt(x, 16))
+}
+
 // execute given function to all adjacent pixels
 function doAdjacent(pivot, targetFunction=()=>null, targetCondition=()=>true) {
   const {x, y} = index_to_xy(pivot);
@@ -106,7 +112,7 @@ const transform = (N, x, dt, k) => {
 
 // Vector operations
 const blackVector = [0, 0, 0];
-const threshold = 30;  // color vector (R,G,B) similarity threshold
+const threshold = 100;  // color vector (R,G,B) similarity threshold
 
 const similarity = (u,v) => math.distance(u,v);  // Euclidian similarity
 const isSimilar = (u,v) => similarity(u,v) < threshold;
@@ -145,7 +151,7 @@ function generateRandomPixel(item) {
 
 
 // main
-const LatticeGrid = () => {
+const LatticeGrid = ({ pick }) => {
   const [ clicked, setClicked ] = useState(-1);
   const [ item, setItem ] = useState(Array(gridSize * gridSize).fill(null).map((element, i) => {
     return {
@@ -160,29 +166,38 @@ const LatticeGrid = () => {
   const tick = () => {
     setTimer(timer => timer + 1);
 
-    const itemVectors = item.map(({vector}) => vector);
-    const itemMatrix = [];
-    for(let i = 0; i < 3; i++) {
-      let componentVector = itemVectors.map((vector) => vector[i]);
-      componentVector = transform(gridSize, componentVector, timerDelay/1000, decayRate);
-      itemMatrix.push(componentVector);
-    }
+    
+    if(timer === tickTime/timerDelay) {
+      const newItem = copyItem(item);
 
-    const newItem = item.map(({index, vector}, i) => {
-      return {
-        index,
-        vector: vector.map((element, j) => itemMatrix[j][i])
-      }
-    })
-    
-    if(timer >= tickTime/timerDelay) {
       if (generateRandomPixel(newItem)) {
-        setTimer(0);
+        setItem(newItem);
+        //setTimer(0);
       }
     }
+    if(timer >= 2*tickTime/timerDelay) {
+      const itemVectors = item.map(({vector}) => vector);
+      const itemMatrix = [];
+      for(let i = 0; i < 3; i++) {
+        let componentVector = itemVectors.map((vector) => vector[i]);
+        componentVector = transform(gridSize, componentVector, timerDelay/1000, decayRate);
+        itemMatrix.push(componentVector);
+      }
+
+      const newItem = item.map(({index, vector}, i) => {
+        return {
+          index,
+          vector: vector.map((element, j) => itemMatrix[j][i])
+        }
+      })
+
+      setItem(newItem);
+    }
+    if(timer >= 3*tickTime/timerDelay) {
+      setTimer(0);
+    }
     
-    setItem(newItem);
-    console.log(timer);
+    //console.log(timer);
   }
 
   useInterval(tick, timerDelay);
@@ -190,7 +205,9 @@ const LatticeGrid = () => {
   useEffect(() => {
     if(clicked !== -1) {
       const newItem = copyItem(item);
-      //newItem[clicked].vector = [0,0,255];
+      if(pick) {  // pick is not null
+        newItem[clicked].vector = hexToRgb(pick);
+      }
       gather(clicked, newItem);
 
       setItem(newItem);
@@ -201,11 +218,14 @@ const LatticeGrid = () => {
     }
   }, [clicked]);  // eslint-disable-line react-hooks/exhaustive-deps
 
+  /*useEffect(() => {
+    console.log(pick);
+  }, [pick])*/
   
   return (
     <Container>
       {
-        item.map(({ index, vector }) => <Pixel index={index} vector={vector} clicked={clicked} setClicked={setClicked} />)
+        item.map(({ index, vector }) => <Pixel key={index} index={index} vector={vector} clicked={clicked} setClicked={setClicked} />)
       }
     </Container>
   );
