@@ -1,4 +1,5 @@
 import React from 'react';
+import './Palette.css'
 
 class Palette extends React.Component {
   constructor(props) {
@@ -41,20 +42,38 @@ class Palette extends React.Component {
 
   render() {
     return (
-      <div>
-        <input type="radio" id="pointer" name="selected" value="pointer" onClick={this.handleChange} defaultChecked />
-        <label htmlFor="pointer">Pointer</label>
+      <div id='palette'>
+      <table><tbody><tr>
+        <td>
+        <label htmlFor="pointer" className='l-radio'>
+          <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={this.handleChange} defaultChecked />
+          <span>Pointer</span>
+        </label>
+        </td>
 
-        <input type="radio" id="eraser" name="selected" value="eraser" onClick={this.handleChange} />
-        <label htmlFor="eraser">Eraser</label>
+        <td>
+        <label htmlFor="eraser" className='l-radio'>
+          <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={this.handleChange} />
+          <span>Eraser</span>
+        </label>
+        </td>
+        
+        <td>
+        <label htmlFor="fore" className='l-radio'>
+          <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={this.handleChange} />
+          <input type="color" id="foreground" className='color-input' name="foreground" value={this.state.foreground} onChange={this.handleChange} />
+          <span>Foreground</span>
+        </label>
+        </td>
 
-        <input type="radio" id="fore" name="selected" value="foreground" onClick={this.handleChange} />
-        <input type="color" id="foreground" name="foreground" value={this.state.foreground} onChange={this.handleChange} />
-        <label htmlFor="fore">&nbsp;Foreground</label>
-
-        <input type="radio" id="back" name="selected" value="background" onClick={this.handleChange} />
-        <input type="color" id="background" name="background" value={this.state.background} onChange={this.handleChange} />
-        <label htmlFor="back">&nbsp;Background</label>
+        <td>
+        <label htmlFor="back" className='l-radio'>
+          <input type="radio" id="back" className='radio-input' name="selected" value="background" onClick={this.handleChange} />
+          <input type="color" id="background" className='color-input' name="background" value={this.state.background} onChange={this.handleChange} />
+          <span>Background</span>
+        </label>
+        </td>
+      </tr></tbody></table>
       </div>
     );
   }
