@@ -52,6 +52,11 @@ const index_to_xy = (index) => {  // index = x*gridSize + y
   }};
 const xy_to_index = (x,y) => x*gridSize + y;
 
+const rgbToHex = (rgbArr) => '#' + rgbArr.map(x => {
+  const hex = x.toString(16)
+  return hex.length === 1 ? '0' + hex : hex
+}).join('')
+
 const hexToRgb = (hex) => {
   return hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
     .substring(1).match(/.{2}/g)
@@ -151,7 +156,7 @@ function generateRandomPixel(item) {
 
 
 // main
-const LatticeGrid = ({ pick }) => {
+const LatticeGrid = ({ pick, setAverageColor }) => {
   const [ clicked, setClicked ] = useState(-1);
   const [ item, setItem ] = useState(Array(gridSize * gridSize).fill(null).map((element, i) => {
     return {
@@ -165,7 +170,14 @@ const LatticeGrid = ({ pick }) => {
 
   const tick = () => {
     setTimer(timer => timer + 1);
-
+    
+    const sumItemVectors = item.reduce(
+      (previous, {vector}) => previous.map((e, i) => e + vector[i]),
+      blackVector
+    );
+    const averageVector = sumItemVectors.map((x) => parseInt(x/(gridSize * gridSize)));
+    
+    setAverageColor(rgbToHex(averageVector));
     
     if(timer === tickTime/timerDelay) {
       const newItem = copyItem(item);
