@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Pixel from './Pixel';
 
 import { create, all } from 'mathjs';
+import { useInterval } from '../tools/interval';
 const config = { };
 const math = create(all, config);
 
@@ -23,26 +24,6 @@ const Container = styled.div`
   grid-template-columns: repeat(${gridSize}, ${gridWidth/gridSize}px);
   grid-template-rows: repeat(${gridSize}, ${gridWidth/gridSize}px);
   `
-
-// useInterval Hook
-// Ref: https://velog.io/@yeyo0x0/React-React-Hooks%EC%97%90%EC%84%9C-setInterval-%EC%82%AC%EC%9A%A9-%EB%AC%B8%EC%A0%9C
-const useInterval = (callback, delay) => {
-  const savedCallback = useRef();
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
 
 // Basic operations
 const index_to_xy = (index) => {  // index = x*gridSize + y
