@@ -18,7 +18,7 @@ class Palette extends React.Component {
   handlePick = () => {
     switch(this.state.selected) {
       case 'pointer':
-        this.setPick(null);
+        this.setPick('');
         break;
       case 'eraser':
         this.setPick('#000000');

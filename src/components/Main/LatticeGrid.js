@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Pixel from './Pixel';
 
 import { create, all } from 'mathjs';
-import { useInterval } from '../tools/interval';
+import { useInterval } from '../../tools/interval';
 const config = { };
 const math = create(all, config);
 
@@ -198,7 +198,7 @@ const LatticeGrid = ({ pick, setAverageColor }) => {
   useEffect(() => {
     if(clicked !== -1) {
       const newItem = copyItem(item);
-      if(pick) {  // pick is not null
+      if(pick) {  // pick is not ''
         newItem[clicked].vector = hexToRgb(pick);
       }
       gather(clicked, newItem);
