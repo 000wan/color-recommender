@@ -1,8 +1,20 @@
 import React from 'react';
-import './Palette.css'
+import './css/Palette.css'
 
-class Palette extends React.Component {
-  constructor(props) {
+interface PaletteProps {
+  setPick: (pick: string) => void
+}
+
+interface PaletteInterface {
+  selected: string,
+  foreground: string,
+  background: string
+}
+
+class Palette extends React.Component <PaletteProps, PaletteInterface> {
+  protected setPick: (pick: string) => void;
+
+  constructor(props: PaletteProps) {
     super(props);
     this.setPick = props.setPick;
 
@@ -13,12 +25,13 @@ class Palette extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handlePick = () => {
     switch(this.state.selected) {
       case 'pointer':
-        this.setPick(null);
+        this.setPick('');
         break;
       case 'eraser':
         this.setPick('#000000');
@@ -34,9 +47,26 @@ class Palette extends React.Component {
     }
   }
 
-  handleChange = ({target: {name, value}}) => {
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    switch(name) {
+      case 'foreground':
+        this.setState({
+          [name]: value
+        }, this.handlePick);
+        break;
+      case 'background':
+        this.setState({
+          [name]: value
+        }, this.handlePick);
+        break;
+    }
+  }
+
+  handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     this.setState({
-      [name]: value
+      'selected': e.currentTarget.value
     }, this.handlePick);
   }
 
@@ -46,21 +76,21 @@ class Palette extends React.Component {
       <table><tbody><tr>
         <td>
         <label htmlFor="pointer" className='l-radio'>
-          <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={this.handleChange} defaultChecked />
+          <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={(e) => this.handleClick(e)} defaultChecked />
           <span>Pointer</span>
         </label>
         </td>
 
         <td>
         <label htmlFor="eraser" className='l-radio'>
-          <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={this.handleChange} />
+          <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={(e) => this.handleClick(e)} />
           <span>Eraser</span>
         </label>
         </td>
         
         <td>
         <label htmlFor="fore" className='l-radio'>
-          <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={this.handleChange} />
+          <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={(e) => this.handleClick(e)} />
           <input type="color" id="foreground" className='color-input' name="foreground" value={this.state.foreground} onChange={this.handleChange} />
           <span>Foreground</span>
         </label>
@@ -68,7 +98,7 @@ class Palette extends React.Component {
 
         <td>
         <label htmlFor="back" className='l-radio'>
-          <input type="radio" id="back" className='radio-input' name="selected" value="background" onClick={this.handleChange} />
+          <input type="radio" id="back" className='radio-input' name="selected" value="background" onClick={(e) => this.handleClick(e)} />
           <input type="color" id="background" className='color-input' name="background" value={this.state.background} onChange={this.handleChange} />
           <span>Background</span>
         </label>

@@ -22,5 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Enviroment file
+.env
+
 # private files
 /_References
