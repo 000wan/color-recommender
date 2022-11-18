@@ -1,5 +1,5 @@
 import React from 'react';
-import './Pixel.css'
+import './css/Pixel.css'
 
 interface PixelProps {
   index: number,
