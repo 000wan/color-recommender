@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
 import { APIBase } from '../tools/api';
 import LatticeGrid from '../components/Main/LatticeGrid';
 import Palette from '../components/Main/Palette';
 import { useInterval } from '../tools/interval';
+import './css/main.css';
 
-const MainPage = (props: {}) => {
+interface MainPageProps {
+  setTitleColor: (titleColor: string) => void
+}
+
+const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ pick, setPick ] = useState<string>('');
-  const [ averageColor, setAverageColor ] = useState<string>('#000000');
 
   const [ serverConnected, setServerConnected ] = useState<boolean>(false);
   useInterval(()=>{
@@ -21,11 +25,10 @@ const MainPage = (props: {}) => {
 
   return (
     <div className="main">
-      <h1 style={{color: averageColor}}>Color Recommender</h1>
-      <hr />
-      <LatticeGrid pick={pick} setAverageColor={setAverageColor} />
       <br />
-      <Palette setPick={setPick} />
+      <LatticeGrid pick={ pick } setAverageColor={ setTitleColor } />
+      <br />
+      <Palette setPick={ setPick } />
       <br />
       {serverConnected ? <p>Server Connected!</p> : <p>Server Disconnected.</p>}
     </div>
