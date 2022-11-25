@@ -38,10 +38,18 @@
 .login-button {
   width: 48%;
   margin: 10px 3px;
-  background-color: #ffffff;
+  color: white;
+  background-color: hsl(233deg 36% 38%);
   padding: 15px 0;
   font-size: 18px;
   font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
+  transition-duration: .2s;
+}
+
+.login-button:disabled {
+  color: rgba(16, 16, 16, 0.3);
+  background-color: #ffffff;
+  cursor: default;
 }
