@@ -72,7 +72,7 @@ class Palette extends React.Component <PaletteProps, PaletteInterface> {
 
   render() {
     return (
-      <div id='palette'>
+      <div className='palette'>
       <table><tbody><tr>
         <td>
         <label htmlFor="pointer" className='l-radio'>

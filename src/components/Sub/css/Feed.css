@@ -1,0 +1,40 @@
+.sub-content {
+  width: 300px;
+  height: 460px;
+  margin: 10px 40px;
+  padding: 0px;
+  border: 1px solid black;
+  border-radius: 20px
+}
+
+.item-feed {
+  height: 90%;
+  width: 96%;
+  margin: 20px 2%;
+  overflow-y: scroll;
+  display: inline-block;
+}
+
+.feed-main {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.feed--title {
+  margin: 15px 0 5px;
+}
+
+.feed--content {
+  margin: 5px 0;
+}
+
+.feed-color {
+  display: inline-block;
+  vertical-align: top;
+  margin: 18px 36px 18px 12px;
+}
+
+.pixel-button {
+  width: 40px;
+  height: 40px;
+}
