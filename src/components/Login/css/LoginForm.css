@@ -53,3 +53,15 @@
   background-color: #ffffff;
   cursor: default;
 }
+
+#visible-button {
+  position: absolute;
+  padding: 0;
+  left: 78%;
+  top: 145px;
+}
+
+.MuiIconButton-label {
+  padding: 5px;
+  height: 25px;
+}

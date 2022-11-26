@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import './css/LoginForm.css'
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
 import axios from "axios";
 import { APIBase } from '../../tools/api';
 import { useInterval } from '../../tools/interval';
+import { useNavigate } from "react-router-dom";
+
+axios.defaults.withCredentials = true; // For cookies
 
 interface UserCredential {
   username: string,
@@ -21,13 +28,16 @@ const LoginForm = ( props: LoginProps ) => {
   const [ nameOK, setNameOK ] = useState<number>(0); // 1: OK, 0: Not OK, -1: Checking
   const [ timer, setTimer ] = useState<number>(0);
 
+  const navigate = useNavigate();
+
   const signin = async (credential: UserCredential) => {
     interface IAPIResponse { loginSuccess: boolean, message: string };
 
     try {
       const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/login", { credential });
       if( data.loginSuccess ) {
-        alert("Sign-In Success: " + data.message);
+        alert(data.message);
+        navigate("/");
       } else {
         alert("Sign-In Failed: " + data.message);
       }
@@ -43,7 +53,8 @@ const LoginForm = ( props: LoginProps ) => {
     try {
       const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/register", { credential });
       if ( data.registerSuccess ) {
-        alert("Sign-Up Success: " + data.message);
+        // alert("Sign-Up Success: " + data.message);
+        signin(credential); // login if register successfully
       } else {
         alert("Sign-Up Failed: " + data.message);
       }
@@ -128,6 +139,8 @@ const LoginForm = ( props: LoginProps ) => {
     }
   }, [ nameOK ]);
 
+  const [ showPwd, setShowPwd ] = useState<boolean>(false);
+
   return (
     <div className={"login-form"}>
       <form onSubmit={ handleSubmit }>
@@ -135,7 +148,10 @@ const LoginForm = ( props: LoginProps ) => {
         <input className={"login-input"} type={"text"} value={ username } onChange={e => setUsername( e.target.value )} />
 
         <label className={"login-label"}>Password (Optional)</label>
-        <input className={"login-input"} type={"password"} value={ password } onChange={e => setPassword( e.target.value )} />
+        <input className={"login-input"} type={ showPwd ? "text" : "password" } value={ password } onChange={e => setPassword( e.target.value )} />
+        <IconButton id={"visible-button"} onClick={e => setShowPwd(!showPwd)}>
+          { showPwd ? <Visibility /> : <VisibilityOff /> }
+        </IconButton>
         <br />
         <button className={"login-button"} type={"submit"} onClick={e => setSubmitType(1)} disabled={authType !== 1}>Sign-In</button>
         <button className={"login-button"} type={"submit"} onClick={e => setSubmitType(0)} disabled={authType !== 0}>Sign-Up</button>
