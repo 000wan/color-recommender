@@ -6,6 +6,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import axios from "axios";
 import { APIBase } from '../../tools/api';
+import { signinHandler, signupHandler } from '../../tools/auth';
 import { useInterval } from '../../tools/interval';
 import { useNavigate } from "react-router-dom";
 
@@ -30,49 +31,15 @@ const LoginForm = ( props: LoginProps ) => {
 
   const navigate = useNavigate();
 
-  const signin = async (credential: UserCredential) => {
-    interface IAPIResponse { loginSuccess: boolean, message: string };
-
-    try {
-      const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/login", { credential });
-      if( data.loginSuccess ) {
-        alert(data.message);
-        navigate("/");
-      } else {
-        alert("Sign-In Failed: " + data.message);
-      }
-    } catch (e: any) {
-      const data:IAPIResponse = e.response.data; 
-      alert(data.message);
-    }
-  }
-
-  const signup = async (credential: UserCredential) => {
-    interface IAPIResponse { registerSuccess: boolean, message: string };
-
-    try {
-      const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/register", { credential });
-      if ( data.registerSuccess ) {
-        // alert("Sign-Up Success: " + data.message);
-        signin(credential); // login if register successfully
-      } else {
-        alert("Sign-Up Failed: " + data.message);
-      }
-    } catch (e: any) {
-      const data:IAPIResponse = e.response.data; 
-      alert(data.message);
-    }
-  }
-
   const handleSubmit = (event: any) => {
     const credential:UserCredential = { username, password }; 
 
     switch( submitType ) {
       case 1:
-        signin(credential);
+        signinHandler(credential, () => navigate("/"));
         break;
       case 0:
-        signup(credential);
+        signupHandler(credential, () => navigate("/"));
         break;
     }
     event.preventDefault();

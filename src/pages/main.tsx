@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { APIBase } from '../tools/api';
 import LatticeGrid from '../components/Main/LatticeGrid';
 import Palette from '../components/Main/Palette';
-import { useInterval } from '../tools/interval';
+import { auth } from '../tools/auth';
 import './css/main.css';
 
 interface MainPageProps {
@@ -12,16 +10,15 @@ interface MainPageProps {
 
 const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ pick, setPick ] = useState<string>('');
+  const [ username, setUsername ] = useState<string>('');
 
-  const [ serverConnected, setServerConnected ] = useState<boolean>(false);
-  useInterval(()=>{
-    interface APIStatus { isOnline: boolean };
-    const asyncFun = async () => {
-      const res = await axios.get<APIStatus>(APIBase + "/status");
-      setServerConnected(res.data.isOnline);
+  auth().then(( data ) => {
+    if( !data.isAuth ) { // token in cookie is not available
+      document.cookie = "x_auth=; max-age=-1"; // delete x_auth cookie
+    } else {
+      setUsername(data.username);
     }
-    asyncFun().catch((e) => setServerConnected(false));
-  }, 5000);
+  });
 
   return (
     <div className="main">
@@ -30,7 +27,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
       <br />
       <Palette setPick={ setPick } />
       <br />
-      {serverConnected ? <p>Server Connected!</p> : <p>Server Disconnected.</p>}
+      Welcome, {username}!
     </div>
   );
 }
