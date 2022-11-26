@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PrivateRoute from './pages/PrivateRoute';
 import MainPage from './pages/main';
 import LoginPage from './pages/login';
 import Header from './components/header';
@@ -14,7 +15,11 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={ <LoginPage/> }/>
-          <Route path="/" element={ <MainPage setTitleColor={ setTitleColor }/> }/>
+          <Route path="/" element={
+            <PrivateRoute redirectPath='/login'>
+              <MainPage setTitleColor={ setTitleColor }/>
+            </PrivateRoute>
+          }/>
         </Routes>
       </BrowserRouter>
     </div>

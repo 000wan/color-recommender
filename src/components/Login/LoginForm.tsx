@@ -152,7 +152,7 @@ const LoginForm = ( props: LoginProps ) => {
         <IconButton id={"visible-button"} onClick={e => setShowPwd(!showPwd)}>
           { showPwd ? <Visibility /> : <VisibilityOff /> }
         </IconButton>
-        <br />
+        
         <button className={"login-button"} type={"submit"} onClick={e => setSubmitType(1)} disabled={authType !== 1}>Sign-In</button>
         <button className={"login-button"} type={"submit"} onClick={e => setSubmitType(0)} disabled={authType !== 0}>Sign-Up</button>
       </form>
