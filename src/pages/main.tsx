@@ -13,7 +13,7 @@ interface MainPageProps {
 interface LogSchema {
   index: number,
   color: string,
-  timestamp: Date
+  timestamp: string
 }
 
 const MainPage = ({ setTitleColor }: MainPageProps) => {

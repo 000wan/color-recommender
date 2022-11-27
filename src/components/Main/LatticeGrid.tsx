@@ -30,7 +30,7 @@ const Container = styled.div`
 interface LogSchema {
   index: number,
   color: string,
-  timestamp: Date
+  timestamp: string
 }
 
 interface LatticeGridProps {

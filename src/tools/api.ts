@@ -4,7 +4,7 @@ const APIBase = process.env.REACT_APP_BACK_URL;
 interface LogSchema {
   index: number,
   color: string,
-  timestamp: Date
+  timestamp: string
 }
 
 const APIGetLog = async () => {
