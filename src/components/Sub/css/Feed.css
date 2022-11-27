@@ -18,6 +18,7 @@
 .feed-main {
   display: inline-block;
   margin: 0 10px;
+  width: 90px;
 }
 
 .feed--title {
@@ -37,4 +38,5 @@
 .pixel-button {
   width: 40px;
   height: 40px;
+  border: 1px solid black;
 }

@@ -2,15 +2,21 @@ import React from "react";
 import Feed from "./Feed";
 import "./css/Feed.css"
 
-const UserHistory = () => {
+interface LogSchema {
+  index: number,
+  color: string,
+  timestamp: Date
+}
+
+interface UserHistoryProps { history: LogSchema[] }
+
+const UserHistory = ({ history }: UserHistoryProps) => {
   return (
     <div className="sub-content">
       <div className="item-feed">
-        <Feed color="#000000" title="#000000" content="black" />
-        <Feed color="#ff0000" title="#ff0000" content="red" />
-        <Feed color="#00ff00" title="#00ff00" content="green" />
-        <Feed color="#0000ff" title="#0000ff" content="blue" />
-      
+        { history.map(({color, timestamp}, i) => 
+            <Feed key={i} color={color} title={color.toUpperCase()} content={timestamp.toString().slice(11,19)} />
+        ) }
       </div>
     </div>
   )

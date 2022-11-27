@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Pixel from './Pixel';
 
 import { create, all } from 'mathjs';
+import { APILogAction } from '../../tools/api';
 import { useInterval } from '../../tools/interval';
 const config = { };
 const math = create(all, config);
@@ -26,8 +27,15 @@ const Container = styled.div`
   grid-template-rows: repeat(${gridSize}, ${gridWidth/gridSize}px);
   `
 
+interface LogSchema {
+  index: number,
+  color: string,
+  timestamp: Date
+}
+
 interface LatticeGridProps {
   pick: string,
+  setHistory: (history: LogSchema[]) => void,
   setAverageColor: (averageColor: string) => void
 }
 
@@ -43,7 +51,7 @@ const index_to_xy = (index: number) => {  // index = x*gridSize + y
 const xy_to_index = (x: number, y: number) => x*gridSize + y;
 
 const rgbToHex = (rgbArr: number[]) => '#' + rgbArr.map(x => {
-  const hex = x.toString(16)
+  const hex = Math.floor(x).toString(16)
   return hex.length === 1 ? '0' + hex : hex
 }).join('');
 
@@ -149,7 +157,7 @@ const generateRandomPixel = (item: GridItem) => {
 
 
 // main
-const LatticeGrid = ({ pick, setAverageColor }: LatticeGridProps) => {
+const LatticeGrid = ({ pick, setHistory, setAverageColor }: LatticeGridProps) => {
   const [ clicked, setClicked ] = useState<number>(-1);
   const [ item, setItem ] = useState<GridItem>(Array(gridSize * gridSize).fill(blackVector));
 
@@ -199,17 +207,22 @@ const LatticeGrid = ({ pick, setAverageColor }: LatticeGridProps) => {
 
   useEffect(() => {
     if(clicked !== -1) {
-      const newItem = copyItem(item);
-      if(pick) {  // pick is not ''
-        newItem[clicked] = hexToRgb(pick);
+      if(timer < 1) { // ignore inputs during 1 timerDelay after previous input
+        setClicked(-1);
+      } else {
+        const newItem = copyItem(item);
+        if(pick) {  // pick is not ''
+          newItem[clicked] = hexToRgb(pick);
+          APILogAction(clicked, pick, (log) => setHistory(log));
+        } else {
+          APILogAction(clicked, rgbToHex(item[clicked]), (log) => setHistory(log));
+        }
+        gather(clicked, newItem);
+  
+        setItem(newItem);
+        setTimer(0);
+        setClicked(-1);
       }
-      gather(clicked, newItem);
-
-      setItem(newItem);
-      setClicked(-1);
-    }
-    else {
-      setTimer(0);
     }
   }, [clicked]);  // eslint-disable-line react-hooks/exhaustive-deps
 
