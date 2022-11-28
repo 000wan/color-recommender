@@ -12,7 +12,7 @@ const APIGetLog = async () => {
   interface IAPIResponse { isAuth: boolean, log: LogSchema[] };
   const { data } = await axios.get<IAPIResponse>(APIBase + "/user/history?length=" + APILogLength);
   if( data.isAuth ) {
-    console.log(data.log);
+    //console.log(data.log);
     return data.log;
   } else {
     console.log('Get log Failed!');
@@ -23,7 +23,7 @@ const APIGetLog = async () => {
 const APILogAction = async ( index:number, color: string, next: (log: LogSchema[]) => void ) => {
   interface IAPIResponse { logSuccess: boolean, log: LogSchema[] };
 
-  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/logAction", { index, color, length: APILogLength });
+  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/action", { index, color, length: APILogLength });
   if( data.logSuccess ) {
     console.log(data.log);
     next(data.log);
@@ -32,4 +32,17 @@ const APILogAction = async ( index:number, color: string, next: (log: LogSchema[
   }
 }
 
-export { APIBase, APIGetLog, APILogAction };
+const APIGetRecommend = async () => {
+  interface IAPIResponse { success: boolean, data: string[] };
+
+  const APIdata = (await axios.get<IAPIResponse>(APIBase + "/user/recommend")).data;
+  if( APIdata.success ) {
+    console.log(APIdata.data);
+    return APIdata.data;
+  } else {
+    console.log('Get recommend Failed!');
+    return [];
+  }
+}
+
+export { APIBase, APIGetLog, APILogAction, APIGetRecommend };

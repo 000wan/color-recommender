@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import LatticeGrid from '../components/Main/LatticeGrid';
 import Palette from '../components/Main/Palette';
-import UserHistory from '../components/Sub/UserHistory';
+import FeedList from '../components/Sub/FeedList';
 import './css/main.css';
 import { auth } from '../tools/auth';
-import { APIGetLog } from '../tools/api';
+import { APIGetLog, APIGetRecommend } from '../tools/api';
 
 interface MainPageProps {
   setTitleColor: (titleColor: string) => void
@@ -16,10 +16,16 @@ interface LogSchema {
   timestamp: string
 }
 
+interface FeedSchema {
+  color: string,
+  content: string
+}
+
 const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ pick, setPick ] = useState<string>('');
-  const [ history, setHistory ] = useState<LogSchema[]>([]);
   const [ username, setUsername ] = useState<string>('');
+  const [ history, setHistory ] = useState<LogSchema[]>([]);
+  const [ recommended, setRecommended ] = useState<string[]>([]);
 
   useEffect(() => {
     auth().then(( data ) => {
@@ -30,13 +36,17 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
       }
     });
     APIGetLog().then(( data ) => setHistory(data));
+    APIGetRecommend().then(( data ) => setRecommended(data));
   }, []);
 
   return (
     <div className='main'>
       <div className='main-block'>
         <h2 className='block-title'>History</h2>
-        <UserHistory history={ history } />
+        <FeedList data={ history.map((log) => { return {
+          color: log.color,
+          content: '⏱'+(new Date(log.timestamp).toTimeString().slice(0,8))
+        } as FeedSchema }) } />
       </div>
       <div className='main-block'>
         <LatticeGrid pick={ pick } setHistory={ setHistory } setAverageColor={ setTitleColor } />
@@ -44,9 +54,10 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
       </div>
       <div className='main-block'>
         <h2 className='block-title'>Recommended for You</h2>
-        <div className='sub-content'>
-
-        </div>
+        <FeedList data={ recommended.map((color, index) => { return {
+          color,
+          content: `#${index+1}`
+        } as FeedSchema }) } />
       </div>
 
       <p>Welcome, {username}!</p>
