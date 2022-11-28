@@ -6,10 +6,11 @@ interface LogSchema {
   color: string,
   timestamp: string
 }
+const APILogLength = 10;
 
 const APIGetLog = async () => {
   interface IAPIResponse { isAuth: boolean, log: LogSchema[] };
-  const { data } = await axios.get<IAPIResponse>(APIBase + "/user/history");
+  const { data } = await axios.get<IAPIResponse>(APIBase + "/user/history?length=" + APILogLength);
   if( data.isAuth ) {
     console.log(data.log);
     return data.log;
@@ -22,7 +23,7 @@ const APIGetLog = async () => {
 const APILogAction = async ( index:number, color: string, next: (log: LogSchema[]) => void ) => {
   interface IAPIResponse { logSuccess: boolean, log: LogSchema[] };
 
-  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/logAction", { index, color });
+  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/logAction", { index, color, length: APILogLength });
   if( data.logSuccess ) {
     console.log(data.log);
     next(data.log);

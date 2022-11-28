@@ -213,7 +213,9 @@ const LatticeGrid = ({ pick, setHistory, setAverageColor }: LatticeGridProps) =>
         const newItem = copyItem(item);
         if(pick) {  // pick is not ''
           newItem[clicked] = hexToRgb(pick);
-          APILogAction(clicked, pick, (log) => setHistory(log));
+          if(pick !== rgbToHex(blackVector)) { // do not log black color
+            APILogAction(clicked, pick, (log) => setHistory(log));
+          }
         } else {
           APILogAction(clicked, rgbToHex(item[clicked]), (log) => setHistory(log));
         }

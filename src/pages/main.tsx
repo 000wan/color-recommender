@@ -43,7 +43,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
         <Palette setPick={ setPick } />
       </div>
       <div className='main-block'>
-        <h2 className='block-title'>Recommend for You</h2>
+        <h2 className='block-title'>Recommended for You</h2>
         <div className='sub-content'>
 
         </div>
