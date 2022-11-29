@@ -1,112 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/Palette.css'
 
 interface PaletteProps {
-  setPick: (pick: string) => void
-}
-
-interface PaletteInterface {
-  selected: string,
+  setPick: (pick: string) => void,
   foreground: string,
-  background: string
+  setForeground: (foreground: string) => void
 }
 
-class Palette extends React.Component <PaletteProps, PaletteInterface> {
-  protected setPick: (pick: string) => void;
+const Palette = ({ setPick, foreground, setForeground }: PaletteProps) => {
+  const [ selected, setSelected ] = useState<string>('pointer');
 
-  constructor(props: PaletteProps) {
-    super(props);
-    this.setPick = props.setPick;
-
-    this.state = {
-      selected: 'pointer',
-      foreground: '#000000',
-      background: '#ffffff'
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handlePick = () => {
-    switch(this.state.selected) {
+  const handlePick = () => {
+    switch( selected ) {
       case 'pointer':
-        this.setPick('');
+        setPick('');
         break;
       case 'eraser':
-        this.setPick('#000000');
+        setPick('#000000');
         break;
       case 'foreground':
-        this.setPick(this.state.foreground);
-        break;
-      case 'background':
-        this.setPick(this.state.background);
+        setPick(foreground);
         break;
       default:
         break;
     }
   }
+  // eslint-disable-next-line
+  useEffect(handlePick, [ foreground, selected ]);
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    switch(name) {
+    switch ( name ) {
       case 'foreground':
-        this.setState({
-          [name]: value
-        }, this.handlePick);
-        break;
-      case 'background':
-        this.setState({
-          [name]: value
-        }, this.handlePick);
+        setForeground( value );
         break;
     }
   }
 
-  handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-    this.setState({
-      'selected': e.currentTarget.value
-    }, this.handlePick);
+  const handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    setSelected( e.currentTarget.value );
   }
 
-  render() {
-    return (
-      <div className='palette'>
-      <table><tbody><tr>
-        <td>
-        <label htmlFor="pointer" className='l-radio'>
-          <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={(e) => this.handleClick(e)} defaultChecked />
-          <span>Pointer</span>
-        </label>
-        </td>
+  return (
+    <div className='palette'>
+    <table><tbody><tr>
+      <td>
+      <label htmlFor="pointer" className='l-radio'>
+        <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={(e) => handleClick(e)} defaultChecked />
+        <span>Pointer</span>
+      </label>
+      </td>
 
-        <td>
-        <label htmlFor="eraser" className='l-radio'>
-          <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={(e) => this.handleClick(e)} />
-          <span>Eraser</span>
-        </label>
-        </td>
-        
-        <td>
-        <label htmlFor="fore" className='l-radio'>
-          <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={(e) => this.handleClick(e)} />
-          <input type="color" id="foreground" className='color-input' name="foreground" value={this.state.foreground} onChange={this.handleChange} />
-          <span>Foreground</span>
-        </label>
-        </td>
-
-        <td>
-        <label htmlFor="back" className='l-radio'>
-          <input type="radio" id="back" className='radio-input' name="selected" value="background" onClick={(e) => this.handleClick(e)} />
-          <input type="color" id="background" className='color-input' name="background" value={this.state.background} onChange={this.handleChange} />
-          <span>Background</span>
-        </label>
-        </td>
-      </tr></tbody></table>
-      </div>
-    );
-  }
+      <td>
+      <label htmlFor="eraser" className='l-radio'>
+        <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={(e) => handleClick(e)} />
+        <span>Eraser</span>
+      </label>
+      </td>
+      
+      <td>
+      <label htmlFor="fore" className='l-radio'>
+        <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={(e) => handleClick(e)} />
+        <input type="color" id="foreground" className='color-input' name="foreground" value={ foreground } onChange={ handleChange } />
+        <span>Brush</span>
+      </label>
+      </td>
+    </tr></tbody></table>
+    </div>
+  );
 }
 
 export default Palette;

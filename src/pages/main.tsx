@@ -23,6 +23,7 @@ interface FeedSchema {
 
 const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ pick, setPick ] = useState<string>('');
+  const [ foreground, setForeground ] = useState<string>('#000000');
   const [ username, setUsername ] = useState<string>('');
   const [ history, setHistory ] = useState<LogSchema[]>([]);
   const [ recommended, setRecommended ] = useState<string[]>([]);
@@ -50,7 +51,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
       </div>
       <div className='main-block'>
         <LatticeGrid pick={ pick } setHistory={ setHistory } setAverageColor={ setTitleColor } />
-        <Palette setPick={ setPick } />
+        <Palette setPick={ setPick } foreground={ foreground } setForeground={ setForeground } />
       </div>
       <div className='main-block'>
         <h2 className='block-title'>Recommended for You</h2>
