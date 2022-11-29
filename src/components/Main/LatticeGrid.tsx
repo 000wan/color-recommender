@@ -18,7 +18,7 @@ const timerDelay = 1000;  // (ms)
 const tickTime = 3000;  // (ms)
 
 const Container = styled.div`
-  margin: 20px 0;
+  margin: 60px 0 20px;
   display: grid;
   gap: 2px;
   justify-content: center;
