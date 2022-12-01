@@ -15,14 +15,19 @@ const StyledFeed = styled.div`
 interface FeedProps {
   color: string,
   title: string,
-  content: string
+  content: string,
+  LClickEvent: ( color: string ) => void,
+  RClickEvent: ( color: string ) => void
 }
 
-const Feed = ({ color, title, content }: FeedProps) => {
+const Feed = ({ color, title, content, LClickEvent, RClickEvent }: FeedProps) => {
   return (
     <StyledFeed>
       <div className="feed-color">
-        <button className="pixel pixel-button" style={{ backgroundColor: color }} />
+        <button className="pixel pixel-button" style={{ backgroundColor: color }} onClick={(e) => LClickEvent(color)} onContextMenu={(e) => {
+          RClickEvent(color);
+          e.preventDefault();
+        }} />
       </div>
       <div className="feed-main">
         <h3 className="feed--title">{title}</h3>
