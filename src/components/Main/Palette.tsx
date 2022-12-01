@@ -1,112 +1,96 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/Palette.css'
 
 interface PaletteProps {
-  setPick: (pick: string) => void
-}
-
-interface PaletteInterface {
+  setPick: React.Dispatch<React.SetStateAction<string>>,
   selected: string,
-  foreground: string,
-  background: string
+  setSelected: React.Dispatch<React.SetStateAction<string>>,
+  FBrushColor: string,
+  BBrushColor: string,
+  setFBrushColor: React.Dispatch<React.SetStateAction<string>>,
+  setBBrushColor: React.Dispatch<React.SetStateAction<string>>
 }
 
-class Palette extends React.Component <PaletteProps, PaletteInterface> {
-  protected setPick: (pick: string) => void;
+const Palette = ({ setPick, selected, setSelected, FBrushColor, BBrushColor, setFBrushColor, setBBrushColor }: PaletteProps) => {
+  //const [ selected, setSelected ] = useState<string>('pointer');
+  const [ foreground, setForeground ] = useState<string>('#000000');
+  const [ background, setBackground ] = useState<string>('#ffffff');
 
-  constructor(props: PaletteProps) {
-    super(props);
-    this.setPick = props.setPick;
+  useEffect(() => {
+    if( FBrushColor ) {
+      setForeground(FBrushColor);
+      setFBrushColor(''); // trigger off
+    }
+  }, [ FBrushColor, setFBrushColor ]);
 
-    this.state = {
-      selected: 'pointer',
-      foreground: '#000000',
-      background: '#ffffff'
-    };
+  useEffect(() => {
+    if( BBrushColor ) {
+      setBackground(BBrushColor);
+      setBBrushColor(''); // trigger off
+    }
+  }, [ BBrushColor, setBBrushColor ]);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
 
-  handlePick = () => {
-    switch(this.state.selected) {
+  const handlePick = () => {
+    switch( selected ) {
       case 'pointer':
-        this.setPick('');
+        setPick('');
         break;
       case 'eraser':
-        this.setPick('#000000');
+        setPick('#000000');
         break;
       case 'foreground':
-        this.setPick(this.state.foreground);
+        setPick(foreground);
         break;
       case 'background':
-        this.setPick(this.state.background);
+        setPick(background);
         break;
       default:
         break;
     }
   }
+  
+  useEffect(handlePick, [ foreground, background, selected, setPick ]);
 
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
-    switch(name) {
-      case 'foreground':
-        this.setState({
-          [name]: value
-        }, this.handlePick);
-        break;
-      case 'background':
-        this.setState({
-          [name]: value
-        }, this.handlePick);
-        break;
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelected( e.target.value );
   }
 
-  handleClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-    this.setState({
-      'selected': e.currentTarget.value
-    }, this.handlePick);
-  }
+  return (
+    <div className='palette'>
+    <table><tbody><tr>
+      <td>
+      <label htmlFor="pointer" className='l-radio'>
+        <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" checked={selected === "pointer"} onChange={handleChange} />
+        <span>Pointer</span>
+      </label>
+      </td>
 
-  render() {
-    return (
-      <div id='palette'>
-      <table><tbody><tr>
-        <td>
-        <label htmlFor="pointer" className='l-radio'>
-          <input type="radio" id="pointer" className='radio-input' name="selected" value="pointer" onClick={(e) => this.handleClick(e)} defaultChecked />
-          <span>Pointer</span>
-        </label>
-        </td>
+      <td>
+      <label htmlFor="eraser" className='l-radio'>
+        <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" checked={selected === "eraser"} onChange={handleChange} />
+        <span>Eraser</span>
+      </label>
+      </td>
+      
+      <td>
+      <label htmlFor="fore" className='l-radio'>
+        <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" checked={selected === "foreground"} onChange={handleChange} />
+        <input type="color" id="foreground" className='color-input' name="foreground" value={ foreground } onChange={(e) => setForeground( e.target.value )} />
+        <span>Foreground</span>
+      </label>
+      </td>
 
-        <td>
-        <label htmlFor="eraser" className='l-radio'>
-          <input type="radio" id="eraser" className='radio-input' name="selected" value="eraser" onClick={(e) => this.handleClick(e)} />
-          <span>Eraser</span>
-        </label>
-        </td>
-        
-        <td>
-        <label htmlFor="fore" className='l-radio'>
-          <input type="radio" id="fore" className='radio-input' name="selected" value="foreground" onClick={(e) => this.handleClick(e)} />
-          <input type="color" id="foreground" className='color-input' name="foreground" value={this.state.foreground} onChange={this.handleChange} />
-          <span>Foreground</span>
-        </label>
-        </td>
-
-        <td>
+      <td>
         <label htmlFor="back" className='l-radio'>
-          <input type="radio" id="back" className='radio-input' name="selected" value="background" onClick={(e) => this.handleClick(e)} />
-          <input type="color" id="background" className='color-input' name="background" value={this.state.background} onChange={this.handleChange} />
+          <input type="radio" id="back" className='radio-input' name="selected" value="background" checked={selected === "background"} onChange={handleChange} />
+          <input type="color" id="background" className='color-input' name="background" value={ background } onChange={(e) => setBackground( e.target.value )} />
           <span>Background</span>
         </label>
         </td>
-      </tr></tbody></table>
-      </div>
-    );
-  }
+    </tr></tbody></table>
+    </div>
+  );
 }
 
 export default Palette;

@@ -1,0 +1,24 @@
+.main {
+  position: relative;
+  top: 100px;
+}
+
+.main-block {
+  display: inline-block;
+  vertical-align: top;
+}
+
+@media screen and (max-width: 1350px) {
+  .main-block {
+    width: 100%;
+  }
+}
+
+.block-title {
+  margin: 50px 0 10px;
+  font-weight: lighter;
+}
+
+.material-symbols-outlined {
+  padding-left: 0;
+}
