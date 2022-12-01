@@ -25,7 +25,7 @@ const APILogAction = async ( index:number, color: string, next: (log: LogSchema[
 
   const { data } = await axios.post<IAPIResponse>(APIBase + "/user/action", { index, color, length: APILogLength });
   if( data.logSuccess ) {
-    console.log(data.log);
+    //console.log(data.log);
     next(data.log);
   } else {
     console.log('Log Failed!');

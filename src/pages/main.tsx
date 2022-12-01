@@ -27,6 +27,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ recommended, setRecommended ] = useState<string[]>([]);
 
   const [ pick, setPick ] = useState<string>('');
+  const [ selected, setSelected ] = useState<string>('pointer');
   const [ FBrushColor, setFBrushColor ] = useState<string>(''); // Foreground
   const [ BBrushColor, setBBrushColor ] = useState<string>(''); // Background
 
@@ -45,30 +46,46 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
   const historyToFeed = (log: LogSchema) => {
     return {
       color: log.color,
-      content: '⏱'+(new Date(log.timestamp).toTimeString().slice(0,8))
+      content: '⏱ '+(new Date(log.timestamp).toTimeString().slice(0,8))
     } as FeedSchema
   }
 
   const recommendToFeed = (color: string, index: number) => {
     return {
       color: color,
-      content: `#${index+1}`
+      content: `# ${index+1}`
     } as FeedSchema 
+  }
+
+  const LClickEvent = (color: string) => {
+    setSelected("foreground");
+    setFBrushColor(color);
+  }
+
+  const RClickEvent = (color: string) => {
+    setSelected("background");
+    setBBrushColor(color);
   }
 
   return (
     <div className='main'>
       <div className='main-block'>
-        <h2 className='block-title'>History</h2>
-        <FeedList data={ history.map(historyToFeed) } LClickEvent={(color: string) => setFBrushColor(color)} RClickEvent={(color: string) => setBBrushColor(color)} />
+        <h2 className='block-title'>
+          <span className="material-symbols-outlined">history</span>
+          History
+        </h2>
+        <FeedList data={ history.map(historyToFeed) } LClickEvent={ LClickEvent } RClickEvent={ RClickEvent } />
       </div>
       <div className='main-block'>
         <LatticeGrid pick={ pick } setHistory={ setHistory } setAverageColor={ setTitleColor } />
-        <Palette setPick={ setPick } FBrushColor={ FBrushColor } BBrushColor={ BBrushColor } setFBrushColor={ setFBrushColor } setBBrushColor={ setBBrushColor } />
+        <Palette setPick={ setPick } selected={ selected } setSelected={ setSelected } FBrushColor={ FBrushColor } BBrushColor={ BBrushColor } setFBrushColor={ setFBrushColor } setBBrushColor={ setBBrushColor } />
       </div>
       <div className='main-block'>
-        <h2 className='block-title'>Recommended for You</h2>
-        <FeedList data={ recommended.map(recommendToFeed) } LClickEvent={(color: string) => setFBrushColor(color)} RClickEvent={(color: string) => setBBrushColor(color)} />
+        <h2 className='block-title'>
+        <span className="material-symbols-outlined">assistant</span>
+          Recommended for You
+        </h2>
+        <FeedList data={ recommended.map(recommendToFeed) } LClickEvent={ LClickEvent } RClickEvent={ RClickEvent } />
       </div>
 
       <p>Welcome, {username}!</p>
