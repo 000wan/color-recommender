@@ -11,6 +11,10 @@ interface UserCredential {
 const auth = async () => {
   interface IAPIResponse { isAuth: boolean, username: string };
   const { data } = await axios.get<IAPIResponse>(APIBase + "/auth");
+  
+  if( !data.isAuth ) { // token in cookie is not available
+    document.cookie = "x_auth=; max-age=-1"; // delete x_auth cookie
+  }
   return data;
 }
 

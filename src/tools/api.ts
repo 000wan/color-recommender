@@ -45,4 +45,20 @@ const APIGetRecommend = async () => {
   }
 }
 
-export { APIBase, APIGetLog, APILogAction, APIGetRecommend };
+const APIGetProfile = async ( username: string ) => {
+  interface IAPIResponse {
+    result: boolean,
+    username: string,
+    joinDate: string 
+  };
+  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/profile", { username });
+  return data;
+}
+
+export {
+  APIBase, 
+  APIGetLog, 
+  APILogAction, 
+  APIGetRecommend,
+  APIGetProfile
+};

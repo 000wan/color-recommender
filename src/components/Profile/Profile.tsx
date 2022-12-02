@@ -1,45 +1,81 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { signoutHandler } from "../../tools/auth";
+import React, { useEffect, useState } from "react";
+import ProfileHeader from "./ProfileHeader";
 import './css/Profile.css';
+import { APIGetProfile } from '../../tools/api';
+import { useInterval } from '../../tools/interval';
 
-const Profile = () => {
-  const navigate = useNavigate();
+interface ProfileProps {
+  USERNAME: string // original username
+}
 
-  const handleSignout = (e: any) => {
-    signoutHandler(() => navigate("/login"));
+const Profile = ({ USERNAME }: ProfileProps) => {
+  const [ username, setUsername ] = useState<string>('');
+  const [ timer, setTimer ] = useState<number>(0);
+
+  // 2: My account, 1: Found, 0: Not Found, -1: Searching
+  const [ profileType, setProfileType ] = useState<number>(-1);
+  const [ NUsername, setNUsername ] = useState<string>('');
+  const [ NJoinDate, setNJoinDate ] = useState<string>('');
+
+  // check whether username duplicated
+  const tickTime = 2000; // ms
+  const timerDelay = 1000;
+
+  const tick = () => {
+    setTimer(timer => timer + 1);
+
+    if ( profileType === -1 ) {
+      if ( !username ) { // Empty name => My Profile
+        APIGetProfile(USERNAME).then(( data ) => {
+          if ( data.result ) {
+            if (data.username === USERNAME) {
+              setProfileType(2); // My account
+              setNUsername(data.username);
+              setNJoinDate(data.joinDate);
+            } else {
+              setProfileType(-1); // Err, try again
+            }
+          } else {
+            setProfileType(-1); // Err
+          }
+        });
+      } else if ( timer >= tickTime/timerDelay ) {
+        // didn't check yet
+        APIGetProfile(username).then(( data ) => {
+          if ( data.result ) {
+            if (data.username === USERNAME) {
+              setProfileType(2); // My account
+            } else {
+              setProfileType(1); // Found
+            }
+            setNUsername(data.username);
+            setNJoinDate(data.joinDate);
+          } else {
+            setProfileType(0); // Not Found
+          }
+        });
+      }
+    }
+    //console.log(timer);
   }
+
+  useEffect(() => {
+    setProfileType(-1);
+    setTimer(0);
+  }, [ username ]);
+
+  useInterval(tick, timerDelay);
 
   return (
     <div className="profile-layout">
-      <div className="profile-header">
-        <div className="profile-box">
-          <div className="profile-box-image">
-            <span className="material-symbols-outlined profile-box-image-icon">
-              person
-            </span>
-          </div>
-          <div className="profile-box-info">
-            <h2>
-              USERNAME
-            </h2>
-            <p>
-              Joined in 2022/12/02
-            </p>
-          </div>
-          <div className="profile-box-option">
-            <label style={{float: "left"}}>
-              <input type="checkbox" name="public" value={1} />
-              &nbsp;Show my profile to others
-            </label>
-            <button className="signout-button" onClick={ handleSignout }>
-              <span className="material-symbols-outlined" style={{paddingLeft: 0}}>
-                logout
-              </span>
-              Sign-Out
-            </button>
-          </div>
+      <div className="profile-top">
+        <div className="profile-search">
+          <span className="material-symbols-outlined">
+            search
+          </span>
+          <input className={"username-input"} type={"text"} value={ username } onChange={e => setUsername( e.target.value )} placeholder={"Search for other users!"} />
         </div>
+        <ProfileHeader profileType={profileType} username={NUsername} joinDate={new Date(NJoinDate).toLocaleDateString()} />
       </div>
       <div className="profile-content">
         <p>Test</p>

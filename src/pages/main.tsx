@@ -31,11 +31,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ BBrushColor, setBBrushColor ] = useState<string>(''); // Background
 
   useEffect(() => {
-    auth().then(( data ) => {
-      if( !data.isAuth ) { // token in cookie is not available
-        document.cookie = "x_auth=; max-age=-1"; // delete x_auth cookie
-      }
-    });
+    auth();
     APIGetLog().then(( data ) => setHistory(data));
     APIGetRecommend().then(( data ) => setRecommended(data));
   }, []);
