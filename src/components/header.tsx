@@ -17,7 +17,7 @@ interface HeaderProps {
 const Header = ({ titleColor }: HeaderProps) => {
   return (
     <HeaderContainer>
-      <h1 style={{color: titleColor}}>Color Recommender</h1>
+      <h1 className="header-title" style={{color: titleColor}} onClick={(e) => window.location.replace("/")}>Color Recommender</h1>
     </HeaderContainer>
   );
 }

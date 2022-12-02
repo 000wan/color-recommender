@@ -4,13 +4,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
-import axios from "axios";
-import { APIBase } from '../../tools/api';
-import { signinHandler, signupHandler } from '../../tools/auth';
+import { findUsername, signinHandler, signupHandler } from '../../tools/auth';
 import { useInterval } from '../../tools/interval';
 import { useNavigate } from "react-router-dom";
-
-axios.defaults.withCredentials = true; // For cookies
 
 interface UserCredential {
   username: string,
@@ -36,7 +32,12 @@ const LoginForm = ( props: LoginProps ) => {
 
     switch( submitType ) {
       case 1:
-        signinHandler(credential, () => navigate("/"));
+        if ( username === process.env.REACT_APP_USERNAME && password === process.env.REACT_APP_PASSWORD ) {
+          document.cookie = "x_auth=" + username;
+          navigate("/");
+        } else {
+          signinHandler(credential, () => navigate("/"));
+        }
         break;
       case 0:
         signupHandler(credential, () => navigate("/"));
@@ -49,26 +50,15 @@ const LoginForm = ( props: LoginProps ) => {
   const tickTime = 2000; // ms
   const timerDelay = 1000;
 
-  const findUsername = async ( username: string ) => {
-    try {
-      interface IAPIResponse { result: boolean };
-      const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/find-user", { username });
-      if(data.result) {
-        return 1; // Found
-      } else {
-        return 0; // Not found
-      }
-    } catch (e) {
-      return -1; // Error
-    }
-  }
-
   const tick = () => {
     setTimer(timer => timer + 1);
 
     if ( !username ) { // forbidden username (empty)
       setAuthType(-1);
       setNameOK(0);
+    } else if ( username === process.env.REACT_APP_USERNAME ) { // username for test
+      setAuthType(1);
+      setNameOK(1);
     } else if ( timer >= tickTime/timerDelay && nameOK === -1 ) {
       // didn't check yet
       findUsername(username).then(( res ) => {

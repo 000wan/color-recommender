@@ -1,3 +1,12 @@
 .App {
   text-align: center;
 }
+
+.header-title {
+  width: fit-content;
+  margin: 25px auto;
+}
+
+.header-title:hover {
+  cursor: pointer;
+}
