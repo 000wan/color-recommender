@@ -63,4 +63,22 @@ const signupHandler = async (credential: UserCredential, next: any) => {
   }
 }
 
-export { auth, findUsername, signinHandler, signupHandler };
+const signoutHandler = async (next: any) => {
+  interface IAPIResponse { logoutSuccess: boolean, message: string };
+
+  try {
+    const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/logout");
+    if( data.logoutSuccess ) {
+      // delete auth cookie
+      document.cookie = "x_auth=; max-age=-1";
+      next();
+    } else {
+      alert("Sign-Out Failed: " + data.message);
+    }
+  } catch (e: any) {
+    const data:IAPIResponse = e.response.data; 
+    alert(data.message);
+  }
+}
+
+export { auth, findUsername, signinHandler, signupHandler, signoutHandler };
