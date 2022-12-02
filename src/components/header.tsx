@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from 'styled-components';
 import './header.css'
 
@@ -16,14 +17,25 @@ interface HeaderProps {
 }
 
 const Header = ({ titleColor }: HeaderProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const titleClickHandler = (e: any) => {
+    if (location.pathname === "/") {
+      window.location.replace("/");
+    } else {
+      navigate("/");
+    }
+  }
+
   return (
     <HeaderContainer>
-      <button className="nav-button">
+      <button className="nav-button" onClick={(e) => navigate("/profile")}>
         <span className="material-symbols-outlined nav-icon">
           account_circle
         </span>
       </button>
-      <h1 className="header-title" style={{color: titleColor}} onClick={(e) => window.location.replace("/")}>
+      <h1 className="header-title" style={{color: titleColor}} onClick={titleClickHandler}>
         Color Recommender
       </h1>
     </HeaderContainer>
