@@ -1,5 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
+import './header.css'
 
 const HeaderContainer = styled.div`
   width: 100%;
@@ -17,7 +18,14 @@ interface HeaderProps {
 const Header = ({ titleColor }: HeaderProps) => {
   return (
     <HeaderContainer>
-      <h1 className="header-title" style={{color: titleColor}} onClick={(e) => window.location.replace("/")}>Color Recommender</h1>
+      <button className="nav-button">
+        <span className="material-symbols-outlined nav-icon">
+          account_circle
+        </span>
+      </button>
+      <h1 className="header-title" style={{color: titleColor}} onClick={(e) => window.location.replace("/")}>
+        Color Recommender
+      </h1>
     </HeaderContainer>
   );
 }
