@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ProfileHeader from "./ProfileHeader";
+import DataPlot from "./DataPlot";
 import './css/Profile.css';
 import { APIGetProfile } from '../../tools/api';
 import { useInterval } from '../../tools/interval';
+
+interface LogSchema {
+  index: number,
+  color: string,
+  timestamp: string
+}
 
 interface ProfileProps {
   USERNAME: string // original username
@@ -16,15 +23,16 @@ const Profile = ({ USERNAME }: ProfileProps) => {
   const [ profileType, setProfileType ] = useState<number>(-1);
   const [ NUsername, setNUsername ] = useState<string>('');
   const [ NJoinDate, setNJoinDate ] = useState<string>('');
+  const [ NLog, setNLog ] = useState<LogSchema[]>([]);
 
   // check whether username duplicated
   const tickTime = 2000; // ms
   const timerDelay = 1000;
 
   const tick = () => {
-    setTimer(timer => timer + 1);
-
     if ( profileType === -1 ) {
+      setTimer(timer => timer + 1);
+
       if ( !username ) { // Empty name => My Profile
         APIGetProfile(USERNAME).then(( data ) => {
           if ( data.result ) {
@@ -32,6 +40,7 @@ const Profile = ({ USERNAME }: ProfileProps) => {
               setProfileType(2); // My account
               setNUsername(data.username);
               setNJoinDate(data.joinDate);
+              setNLog(data.log);
             } else {
               setProfileType(-1); // Err, try again
             }
@@ -50,6 +59,7 @@ const Profile = ({ USERNAME }: ProfileProps) => {
             }
             setNUsername(data.username);
             setNJoinDate(data.joinDate);
+            setNLog(data.log);
           } else {
             setProfileType(0); // Not Found
           }
@@ -78,7 +88,12 @@ const Profile = ({ USERNAME }: ProfileProps) => {
         <ProfileHeader profileType={profileType} username={NUsername} joinDate={new Date(NJoinDate).toLocaleDateString()} />
       </div>
       <div className="profile-content">
-        <p>Test</p>
+        {
+          ( profileType === 2 || profileType === 1 )
+          ? <DataPlot data={ NLog } />
+          : <br />
+        }
+        
       </div>
     </div>
   )

@@ -49,7 +49,8 @@ const APIGetProfile = async ( username: string ) => {
   interface IAPIResponse {
     result: boolean,
     username: string,
-    joinDate: string 
+    joinDate: string,
+    log: LogSchema[]
   };
   const { data } = await axios.post<IAPIResponse>(APIBase + "/user/profile", { username });
   return data;

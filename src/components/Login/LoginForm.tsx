@@ -51,26 +51,27 @@ const LoginForm = ( props: LoginProps ) => {
   const timerDelay = 1000;
 
   const tick = () => {
-    setTimer(timer => timer + 1);
+    if ( nameOK === -1 ) {
+      setTimer(timer => timer + 1);
 
-    if ( !username ) { // forbidden username (empty)
-      setAuthType(-1);
-      setNameOK(0);
-    } else if ( username === process.env.REACT_APP_USERNAME ) { // username for test
-      setAuthType(1);
-      setNameOK(1);
-    } else if ( timer >= tickTime/timerDelay && nameOK === -1 ) {
-      // didn't check yet
-      findUsername(username).then(( res ) => {
-        setAuthType(res); // 1: Found => Sign-In, 0: Not found => Sign-Up, -1: Neither available
-        if( res === -1 ) {
-          setNameOK(-1);
-        } else {
-          setNameOK(1);
-        }
-      });
+      if ( !username ) { // forbidden username (empty)
+        setAuthType(-1);
+        setNameOK(0);
+      } else if ( username === process.env.REACT_APP_USERNAME ) { // username for test
+        setAuthType(1);
+        setNameOK(1);
+      } else if ( timer >= tickTime/timerDelay ) {
+        // didn't check yet
+        findUsername(username).then(( res ) => {
+          setAuthType(res); // 1: Found => Sign-In, 0: Not found => Sign-Up, -1: Neither available
+          if( res === -1 ) {
+            setNameOK(-1);
+          } else {
+            setNameOK(1);
+          }
+        });
+      }
     }
-    //console.log(timer);
   }
 
   useEffect(() => {
