@@ -1,19 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signoutHandler } from "../../tools/auth";
+import { APIHideProfile } from "../../tools/api";
 import './css/ProfileHeader.css'
 
 interface ProfileHeaderProps {
   profileType: number // 2: My account, 1: Found, 0: Not Found, -1: Searching
   username: string,
-  joinDate: string
+  joinDate: string,
+  hideProfile: boolean
 }
 
-const ProfileHeader = ({ profileType, username, joinDate }: ProfileHeaderProps) => {
+const ProfileHeader = ({ profileType, username, joinDate, hideProfile }: ProfileHeaderProps) => {
+  const [ hidden, setHidden ] = useState<boolean>(hideProfile);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setHidden(hideProfile);
+  }, [ hideProfile ]);
 
   const handleSignout = (e: any) => {
     signoutHandler(() => navigate("/login"));
+  }
+
+  const checkHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    APIHideProfile(e.target.checked).then(( data ) => {
+      setHidden(data.hideProfile);
+    });
   }
 
   return (
@@ -59,8 +72,8 @@ const ProfileHeader = ({ profileType, username, joinDate }: ProfileHeaderProps) 
             profileType === 2
             ? <div> 
               <label style={{float: "left"}}>
-                <input type="checkbox" name="public" value={1} />
-                &nbsp;Show my profile to others
+                <input type="checkbox" name="hide" checked={hidden} onChange={(e) => checkHandler(e)} />
+                &nbsp;Hide profile data to others
               </label>
               <button className="signout-button" onClick={ handleSignout }>
                 <span className="material-symbols-outlined" style={{paddingLeft: 0}}>

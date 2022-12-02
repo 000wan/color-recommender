@@ -50,16 +50,28 @@ const APIGetProfile = async ( username: string ) => {
     result: boolean,
     username: string,
     joinDate: string,
-    log: LogSchema[]
+    log: LogSchema[],
+    hideProfile: boolean
   };
   const { data } = await axios.post<IAPIResponse>(APIBase + "/user/profile", { username });
   return data;
 }
+
+const APIHideProfile = async ( value: boolean ) => {
+  interface IAPIResponse {
+    success: boolean,
+    hideProfile: boolean
+  };
+  const { data } = await axios.post<IAPIResponse>(APIBase + "/user/hide-profile", { value });
+  return data;
+}
+
 
 export {
   APIBase, 
   APIGetLog, 
   APILogAction, 
   APIGetRecommend,
-  APIGetProfile
+  APIGetProfile,
+  APIHideProfile
 };

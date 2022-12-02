@@ -24,6 +24,7 @@ const Profile = ({ USERNAME }: ProfileProps) => {
   const [ NUsername, setNUsername ] = useState<string>('');
   const [ NJoinDate, setNJoinDate ] = useState<string>('');
   const [ NLog, setNLog ] = useState<LogSchema[]>([]);
+  const [ NHideProfile, setNHideProfile ] = useState<boolean>(false);
 
   // check whether username duplicated
   const tickTime = 2000; // ms
@@ -41,6 +42,7 @@ const Profile = ({ USERNAME }: ProfileProps) => {
               setNUsername(data.username);
               setNJoinDate(data.joinDate);
               setNLog(data.log);
+              setNHideProfile(data.hideProfile);
             } else {
               setProfileType(-1); // Err, try again
             }
@@ -60,6 +62,7 @@ const Profile = ({ USERNAME }: ProfileProps) => {
             setNUsername(data.username);
             setNJoinDate(data.joinDate);
             setNLog(data.log);
+            setNHideProfile(data.hideProfile);
           } else {
             setProfileType(0); // Not Found
           }
@@ -85,15 +88,27 @@ const Profile = ({ USERNAME }: ProfileProps) => {
           </span>
           <input className={"username-input"} type={"text"} value={ username } onChange={e => setUsername( e.target.value )} placeholder={"Search for other users!"} />
         </div>
-        <ProfileHeader profileType={profileType} username={NUsername} joinDate={new Date(NJoinDate).toLocaleDateString()} />
+        <ProfileHeader profileType={profileType} username={NUsername} joinDate={new Date(NJoinDate).toLocaleDateString()} hideProfile={NHideProfile} />
       </div>
       <div className="profile-content">
         {
-          ( profileType === 2 || profileType === 1 )
+          ( profileType === 2 ) // my profile
           ? <DataPlot data={ NLog } />
+          : (
+          ( profileType === 1 ) // other profile
+          ? (
+          ( NHideProfile )
+          ? <p>
+            <span className="material-symbols-outlined">
+              lock
+            </span>
+            Profile Hidden by Account Owner
+            </p>
+          : <DataPlot data={ NLog } />
+          )
           : <br />
+          )
         }
-        
       </div>
     </div>
   )
