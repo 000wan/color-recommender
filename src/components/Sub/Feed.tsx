@@ -1,6 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import './css/Feed.css';
+
+const feedFade = keyframes`
+  0%   { opacity: 0; }
+  25%  { opacity: 0.7; }
+  50%  { opacity: 1; }
+  100% { opacity: 1; }
+`
 
 const StyledFeed = styled.div`
     border: 1px solid rgb(0 0 0 / 30%);
@@ -10,6 +17,7 @@ const StyledFeed = styled.div`
     height: 80px;
     width: 200px;
     box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
+    animation: ${feedFade} 1s;
   `
 
 interface FeedProps {

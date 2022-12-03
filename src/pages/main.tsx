@@ -22,7 +22,6 @@ interface FeedSchema {
 }
 
 const MainPage = ({ setTitleColor }: MainPageProps) => {
-  const [ username, setUsername ] = useState<string>('');
   const [ history, setHistory ] = useState<LogSchema[]>([]);
   const [ recommended, setRecommended ] = useState<string[]>([]);
 
@@ -32,13 +31,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
   const [ BBrushColor, setBBrushColor ] = useState<string>(''); // Background
 
   useEffect(() => {
-    auth().then(( data ) => {
-      if( !data.isAuth ) { // token in cookie is not available
-        document.cookie = "x_auth=; max-age=-1"; // delete x_auth cookie
-      } else {
-        setUsername(data.username);
-      }
-    });
+    auth();
     APIGetLog().then(( data ) => setHistory(data));
     APIGetRecommend().then(( data ) => setRecommended(data));
   }, []);
@@ -71,7 +64,7 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
     <div className='main'>
       <div className='main-block'>
         <h2 className='block-title'>
-          <span className="material-symbols-outlined">history</span>
+          <span className="material-symbols-outlined block-title-icon">history</span>
           History
         </h2>
         <FeedList data={ history.map(historyToFeed) } LClickEvent={ LClickEvent } RClickEvent={ RClickEvent } />
@@ -82,13 +75,11 @@ const MainPage = ({ setTitleColor }: MainPageProps) => {
       </div>
       <div className='main-block'>
         <h2 className='block-title'>
-        <span className="material-symbols-outlined">assistant</span>
+        <span className="material-symbols-outlined block-title-icon">assistant</span>
           Recommended for You
         </h2>
         <FeedList data={ recommended.map(recommendToFeed) } LClickEvent={ LClickEvent } RClickEvent={ RClickEvent } />
       </div>
-
-      <p>Welcome, {username}!</p>
     </div>
   );
 }

@@ -1,0 +1,45 @@
+.profile-box {
+  margin: 50px auto;
+  display: inline-block;
+  width: 500px;
+  text-align: left;
+}
+
+.profile-box-image {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 5px solid black;
+  float: left;
+}
+
+.profile-box-image-icon {
+  font-size: 100px;
+  padding: 0;
+  margin: 10px;
+}
+
+.profile-box-info {
+  display: inline-block;
+  margin: 15px 45px;
+  width: 280px;
+  height: 100px;
+  text-align: left;
+}
+
+.profile-box-option {
+  margin-top: 30px;
+  height: 40px;
+}
+
+.signout-button {
+  float: right;
+  width: 130px;
+  height: 40px;
+  color: white;
+  background-color: hsl(233deg 36% 38%);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+}
