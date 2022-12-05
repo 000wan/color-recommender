@@ -34,12 +34,13 @@ const findUsername = async ( username: string ) => {
 }
 
 const signinHandler = async (credential: UserCredential, next: any) => {
-  interface IAPIResponse { loginSuccess: boolean, message: string };
+  interface IAPIResponse { loginSuccess: boolean, token: string, message: string };
 
   try {
     const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/login", { credential });
     if( data.loginSuccess ) {
       //alert(data.message);
+      document.cookie = "x_auth=" + data.token;
       next();
     } else {
       alert("Sign-In Failed: " + data.message);
