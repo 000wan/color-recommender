@@ -1,6 +1,11 @@
 # Color Recommender
 
-Color Recommend System with React & Nodejs
+🎨 Color Recommend System with React & Nodejs
+
+## Deployment
+
+### Netlify
+https://color-recommender-app.netlify.app/
 
 ## SPARCS Server 
 http://ssal.sparcs.org:15005/
@@ -8,10 +13,25 @@ http://ssal.sparcs.org:15005/
 ## Netlify (Backend not connected)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/fe4c964f-8899-4aac-8a20-ddb17d2907f7/deploy-status)](https://app.netlify.com/sites/color-recommender-app/deploys)
 
-https://color-recommender-app.netlify.app/
+### SPARCS Server 
+http://ssal.sparcs.org:15005/
 
 ## Image
+<img width="950" alt="app_image_main" src="https://user-images.githubusercontent.com/87213416/205913528-c764bcf4-291d-4b77-a691-11b2db6756f4.jpg">
 
-<img width="950" alt="app_image1" src="https://user-images.githubusercontent.com/87213416/197724024-2668d60b-cc4d-433f-b7a5-281af13f3bcd.png">
+<details>
+  <summary style="font-size:18px">See more</summary>
 
-<img width="950" alt="app_image2" src="https://user-images.githubusercontent.com/87213416/197724213-0ec8bd0a-5a8b-4541-96be-b08d6c6521c8.png">
+  <img width="950" alt="app_image_profile" src="https://user-images.githubusercontent.com/87213416/205913866-52f22b52-3026-44ac-a9fc-6256be8fa703.jpg">
+
+  <img width="950" alt="app_image_login" src="https://user-images.githubusercontent.com/87213416/205914030-32bc1d6b-fda5-424d-94ea-dac34e6c61b9.jpg">
+
+</details>
+
+## Theory
+
+### Recommendation
+[k-means clustering](https://en.wikipedia.org/wiki/K-means_clustering)
+
+### Blending Colors
+[Discrete heat equation](https://en.wikipedia.org/wiki/Discrete_Laplace_operator#Discrete_heat_equation)

@@ -37,7 +37,7 @@ const APIGetRecommend = async () => {
 
   const APIdata = (await axios.get<IAPIResponse>(APIBase + "/user/recommend")).data;
   if( APIdata.success ) {
-    console.log(APIdata.data);
+    // console.log(APIdata.data);
     return APIdata.data;
   } else {
     console.log('Get recommend Failed!');
