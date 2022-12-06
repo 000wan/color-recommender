@@ -40,7 +40,7 @@ const signinHandler = async (credential: UserCredential, next: any) => {
     const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/login", { credential });
     if( data.loginSuccess ) {
       //alert(data.message);
-      //document.cookie = "x_auth=" + data.token;
+      document.cookie = "x_auth=" + data.token;
       next();
     } else {
       alert("Sign-In Failed: " + data.message);
@@ -75,7 +75,7 @@ const signoutHandler = async (next: any) => {
     const { data } = await axios.post<IAPIResponse>(APIBase + "/auth/logout");
     if( data.logoutSuccess ) {
       // delete auth cookie
-      // document.cookie = "x_auth=; max-age=-1";
+      document.cookie = "x_auth=; max-age=-1";
       next();
     } else {
       alert("Sign-Out Failed: " + data.message);
